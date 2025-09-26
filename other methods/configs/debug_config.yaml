@@ -1,0 +1,33 @@
+# Debug Configuration - Disables Weighted Sampling Temporarily
+# Use this to test if the basic training pipeline works without weighted sampling
+
+save_dir: 'results/preprocessed_training'
+model_type: 'lightweight'
+num_leads: 2
+input_size: 1080
+num_classes: 5
+batch_size: 32
+learning_rate: 0.001
+max_epochs: 10  # Reduced for debugging
+patience: 5      # Reduced for debugging
+device: 'cpu'    # Use CPU for debugging
+num_workers: 2   # Reduced for debugging
+
+training:
+  scheduler: 'cosine'
+  gradient_clip: 1.0
+  weight_decay: 1e-4
+  dropout_rate: 0.4
+  
+  # Temporarily disable weighted sampling for debugging
+  use_weighted_sampling: false
+  
+  # Enable fallback mode if you want to test weighted sampling with fallback
+  # use_weighted_sampling: true
+  # enable_fallback: true
+  # sampling_strategy: 'sqrt_inverse'  # Less aggressive strategy
+
+# Debug settings
+debug:
+  verbose_logging: true
+  log_level: 'DEBUG'

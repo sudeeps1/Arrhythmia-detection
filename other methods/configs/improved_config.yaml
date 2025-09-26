@@ -1,0 +1,126 @@
+# Improved ECG Arrhythmia Classification Configuration
+
+# Data Configuration
+data_path: "mit-bih-arrhythmia-database-1.0.0/mit-bih-arrhythmia-database-1.0.0"
+sampling_rate: 360
+low_freq: 0.5
+high_freq: 40.0
+window_size: 3.0
+overlap: 0.5
+normalize_method: "zscore"
+target_fs: 360
+max_records: 47  # Use all records
+
+# Model Configuration
+model_type: "lightweight"  # "full" or "lightweight"
+num_leads: 2
+input_size: 1080  # 3 seconds at 360 Hz
+num_classes: 5
+model_params:
+  hidden_size: 64
+  dropout_rate: 0.4  # Increased dropout
+
+# Training Configuration
+batch_size: 32
+learning_rate: 0.001
+weight_decay: 1e-4  # Increased weight decay
+max_epochs: 50      # Increased epochs
+patience: 15        # Increased patience
+class_weights: [1.0, 3.0, 2.0, 4.0, 1.0]  # Adjusted for better balance
+
+# Hardware Configuration
+device: "auto"  # "auto", "cuda", or "cpu"
+num_workers: 4
+
+# Output Configuration
+save_dir: "results/improved"
+save_interval: 5  # Save model every N epochs
+
+# Processed Data Configuration
+processed_data_dir: "data/processed"
+
+# Data Augmentation Configuration
+augmentation:
+  window_augment: true          # Apply window-level augmentations
+  synthetic_vbeats: true        # Generate synthetic VEBs
+  augmentation_prob: 0.5        # Probability of applying augmentation
+  noise_level: [0.01, 0.05]    # Gaussian noise range
+  warp_factor: [0.9, 1.1]      # Time warping range
+  scale_factor: [0.8, 1.2]     # Amplitude scaling range
+
+# Training Strategy Configuration
+training:
+  scheduler: "cosine"           # "cosine", "plateau", or "none"
+  gradient_clip: 1.0           # Gradient clipping value
+  weight_decay: 1e-4           # Weight decay for regularization
+  dropout_rate: 0.4            # Dropout rate
+  early_stopping: true         # Enable early stopping
+  save_best_only: true         # Save only best model
+
+# Cross-Subject Validation Configuration
+validation:
+  cross_subject: true          # Enable cross-subject validation
+  loso_cv: true               # Leave-One-Subject-Out cross-validation
+  test_subjects: null         # null for automatic split, or list of subject names
+  validation_split: 0.2       # Validation split ratio
+
+# Interpretability Configuration
+interpretability:
+  compute_attributions: true
+  attribution_methods: 
+    - "integrated_gradients"
+    - "occlusion"
+    - "saliency"
+    - "shap"
+  extract_rules: true
+  rule_classifiers: 
+    - "decision_tree"
+    - "random_forest"
+    - "logistic"
+  beat_level_analysis: true   # Analyze individual beats
+  clinical_visualizations: true # Generate clinical plots
+
+# Advanced Interpretability Configuration
+advanced_interpretability:
+  shap_background_samples: 100  # Number of background samples for SHAP
+  occlusion_window_size: 50     # Window size for occlusion
+  saliency_smooth: true         # Smooth saliency maps
+  extract_clinical_rules: true  # Extract clinical decision rules
+  generate_reports: true        # Generate clinical reports
+
+# Evaluation Configuration
+evaluation_metrics:
+  - "accuracy"
+  - "precision"
+  - "recall"
+  - "f1_score"
+  - "auroc"
+  - "auprc"
+  - "kappa"
+  - "matthews_corrcoef"
+  - "macro_f1"      # Added macro F1 for imbalanced classes
+  - "weighted_f1"   # Added weighted F1
+
+# Novel Pattern Discovery Configuration
+pattern_discovery:
+  autoencoder: false           # Train autoencoder for anomaly detection
+  clustering: false            # Cluster abnormal beats
+  reconstruction_threshold: 0.1 # Threshold for anomaly detection
+  min_cluster_size: 5          # Minimum cluster size for HDBSCAN
+
+# Logging Configuration
+log_level: "INFO"
+save_logs: true
+tensorboard_logging: false
+log_file: "improved_training.log"
+
+# Reproducibility
+random_seed: 42
+
+# Optional Enhancements
+enhancements:
+  residual_connections: false   # Add residual connections to CNN
+  multi_head_attention: false  # Use multi-head attention
+  late_fusion: false           # Process leads separately then fuse
+  ensemble_methods: false      # Use ensemble of models
+

@@ -1,0 +1,45 @@
+# Configuration for Training with Weighted Sampling
+# This config enables weighted sampling to handle class imbalance
+
+save_dir: 'results/preprocessed_training'
+model_type: 'lightweight'
+num_leads: 2
+input_size: 1080
+num_classes: 5
+batch_size: 32
+learning_rate: 0.001
+max_epochs: 50
+patience: 15
+device: 'auto'
+num_workers: 4
+
+training:
+  scheduler: 'cosine'
+  gradient_clip: 1.0
+  weight_decay: 1e-4
+  dropout_rate: 0.4
+  
+  # Weighted Sampling Configuration
+  use_weighted_sampling: true  # Enable/disable weighted sampling
+  
+  # Sampling Strategy Options:
+  # - 'inverse_frequency': Most aggressive, gives highest weight to rare classes
+  # - 'sqrt_inverse': Less aggressive, square root of inverse frequency
+  # - 'balanced': Equal weight for all classes
+  sampling_strategy: 'inverse_frequency'
+  
+  # Alternative strategies you can try:
+  # sampling_strategy: 'sqrt_inverse'  # Less aggressive balancing
+  # sampling_strategy: 'balanced'      # Equal class weights
+
+# Data augmentation settings (if using)
+augmentation:
+  enabled: false
+  window_augment: false
+  synthetic_vbeats: false
+
+# Cross-validation settings
+cross_validation:
+  enabled: false
+  num_folds: 5
+  use_weighted_sampling: true  # Apply weighted sampling in cross-validation too

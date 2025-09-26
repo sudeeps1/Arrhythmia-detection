@@ -1,0 +1,65 @@
+# ECG Arrhythmia Classification Training Configuration
+
+# Data Configuration
+data_path: "mit-bih-arrhythmia-database-1.0.0/mit-bih-arrhythmia-database-1.0.0"
+sampling_rate: 360
+low_freq: 0.5
+high_freq: 40.0
+window_size: 3.0
+overlap: 0.5
+normalize_method: "zscore"
+target_fs: 360
+max_records: 47  # Use all records
+
+# Model Configuration
+model_type: "lightweight"  # "full" or "lightweight"
+num_leads: 2
+input_size: 1080  # 3 seconds at 360 Hz
+num_classes: 5
+model_params:
+  hidden_size: 64
+  dropout_rate: 0.3
+
+# Training Configuration
+batch_size: 32
+learning_rate: 0.001
+weight_decay: 1e-5
+max_epochs: 5
+patience: 10
+class_weights: [1.0, 2.0, 2.0, 3.0, 1.0]  # Normal, SV, V, Fusion, Paced
+
+# Hardware Configuration
+device: "auto"  # "auto", "cuda", or "cpu"
+num_workers: 4
+
+# Output Configuration
+save_dir: "results"
+save_interval: 5  # Save model every N epochs
+
+# Cross-subject Validation
+test_subjects: null  # null for automatic split, or list of subject names
+
+# Interpretability Configuration
+compute_attributions: true
+attribution_methods: ["integrated_gradients", "occlusion"]
+extract_rules: true
+rule_classifiers: ["decision_tree", "random_forest", "logistic"]
+
+# Evaluation Configuration
+evaluation_metrics:
+  - "accuracy"
+  - "precision"
+  - "recall"
+  - "f1_score"
+  - "auroc"
+  - "auprc"
+  - "kappa"
+  - "matthews_corrcoef"
+
+# Logging Configuration
+log_level: "INFO"
+save_logs: true
+tensorboard_logging: false
+
+# Reproducibility
+random_seed: 42
